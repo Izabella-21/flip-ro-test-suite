@@ -1,0 +1,25 @@
+{
+  "name": "@flip-ro/playwright-tests",
+  "version": "1.0.0",
+  "description": "Playwright test suite for Flip.ro - Romanian refurbished electronics",
+  "scripts": {
+    "test": "playwright test",
+    "test:headed": "playwright test --headed",
+    "test:debug": "playwright test --debug",
+    "test:chrome": "playwright test --project=chromium",
+    "test:firefox": "playwright test --project=firefox",
+    "test:webkit": "playwright test --project=webkit",
+    "test:mobile": "playwright test --project=mobile-chrome",
+    "test:smoke": "playwright test --grep @smoke",
+    "test:regression": "playwright test --grep @regression",
+    "report": "playwright show-report",
+    "codegen": "playwright codegen https://flip.ro",
+    "update": "npx playwright install"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.40.0",
+    "@types/node": "^20.0.0",
+    "dotenv": "^16.0.0",
+    "typescript": "^5.0.0"
+  }
+}
