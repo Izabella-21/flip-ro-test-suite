@@ -89,18 +89,14 @@ test.describe('Flip.ro Homepage', () => {
                 await expect(categoryLink.first()).toBeVisible()
             }
         } else {
-            // MOBILE: Open the menu and use mobile selectors
+            // MOBILE: Open the menu and check the links inside
             const menuButton = page.locator('.nav-icon').first()
             await expect(menuButton).toBeVisible()
             await menuButton.click()
-            await page.waitForTimeout(300)
-
-            // Use mobile menu selectors
+            await expect(page.getByRole('link', { name: 'Telefoane', exact: true })).toBeVisible()
             const mobileNavLinks = page.locator('[data-cy^="menu-b-menu."]')
             const linkCount = await mobileNavLinks.count()
             expect(linkCount).toBeGreaterThan(3)
-
-            // Check specific categories in the mobile menu
             const categories = ['Telefoane', 'Laptopuri', 'Tablete']
             for (const category of categories) {
                 const categoryLink = page.getByRole('link', { name: category, exact: true })
