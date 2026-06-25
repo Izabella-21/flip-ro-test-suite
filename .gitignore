@@ -22,9 +22,9 @@ package-lock.json
 # Playwright
 playwright-report/
 test-results/
-test-results.json          # 👈 ADDED
-junit.xml                  # 👈 ADDED
-*.trace.gz                 # 👈 ADDED (Playwright trace files)
+test-results.json         
+junit.xml                 
+*.trace.gz               
 
 # Cypress
 cypress/screenshots/
@@ -37,7 +37,7 @@ reports/
 *.log
 *.xml
 *.html
-!README.md        # Except README files (we want to keep those)
+!README.md      
 
 # ============================================================
 # Environment Variables

@@ -1,4 +1,5 @@
 import { test, expect, Page } from '@playwright/test'
+import { handleCookiePopup } from '../../utils/cookie-helper'
 
 /**
  * Test Suite: Flip.ro Homepage
@@ -6,22 +7,6 @@ import { test, expect, Page } from '@playwright/test'
  * 
  * @tags smoke, homepage, critical
  */
-async function handleCookiePopup(page: Page) {
-    try {
-        const acceptButton = page.locator('#CybotCookiebotDialogBodyButtonAccept')
-
-        // Check if the button is visible (give it 3 seconds to appear)
-        if (await acceptButton.isVisible({ timeout: 3000 })) {
-            await acceptButton.click()
-            console.log('Cookie popup accepted (ID selector worked)')
-            // Wait a moment for the popup to disappear
-            await page.waitForTimeout(500)
-        }
-    } catch (error) {
-        // No popup found
-        console.log('No cookie popup found')
-    }
-}
 
 test.describe('Flip.ro Homepage', () => {
 

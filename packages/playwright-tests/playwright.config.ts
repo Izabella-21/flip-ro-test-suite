@@ -12,10 +12,11 @@ export default defineConfig({
     fullyParallel: true,
 
     // Retry failed tests in CI
-    retries: process.env.CI ? 2 : 1,
+    // retries: process.env.CI ? 2 : 1,
+    retries: 0,
 
     // Number of parallel workers
-    workers: process.env.CI ? 4 : undefined,
+    workers: process.env.CI ? 4 : 2,
 
     // Test timeout
     timeout: 60000,
