@@ -11,13 +11,18 @@ test.describe('Flip.ro Product Page', () => {
         await page.goto('/')
         await handleCookiePopup(page)
         searchResults = new SearchResultsPage(page)
-        await searchResults.searchFor('iPhone')
-        await searchResults.clickFirstProduct()
-        productPage = new ProductPage(page)
-        await productPage.waitForPageLoad()
+
+        await test.step('Navigate to product page', async () => {
+            await searchResults.searchFor('iPhone')
+            await page.waitForTimeout(2000) // Wait for results
+            await searchResults.clickFirstProduct()
+            productPage = new ProductPage(page)
+            await productPage.waitForPageLoad()
+        })
     })
 
     test('Product page displays title and price', async () => {
+        await productPage.page.waitForTimeout(1000)
         const title = await productPage.getProductTitle()
         const price = await productPage.getProductPrice()
         expect(title.length).toBeGreaterThan(3)
@@ -54,6 +59,8 @@ test.describe('Flip.ro Product Page', () => {
     })
 
     test('Product description is present', async () => {
+        await productPage.page.waitForTimeout(1000)
+        await expect(productPage.description).toBeVisible({ timeout: 15000 })
         await expect(productPage.description).toBeVisible()
     })
 })

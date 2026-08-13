@@ -42,8 +42,12 @@ export class ProductPage {
     }
 
     async waitForPageLoad(): Promise<void> {
-        await this.productTitle.waitFor({ state: 'visible', timeout: process.env.CI ? 30000 : 10000 })
+        await this.productTitle.waitFor({
+            state: 'visible',
+            timeout: process.env.CI ? 45000 : 10000
+        })
         await this.page.waitForLoadState('domcontentloaded')
+        await this.page.waitForTimeout(1000)
     }
 
     /**

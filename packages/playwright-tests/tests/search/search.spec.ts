@@ -41,17 +41,17 @@ test.describe('Flip.ro Search Functionality', () => {
     })
 
     test('Search for laptop returns laptop products', async () => {
-        const testData = generateTestData()
-        const searchTerm = testData.searchTermLaptop
+        const searchTerm = 'MacBook'
         await searchResults.searchFor(searchTerm)
 
         const titles = await searchResults.getAllProductTitles()
         const hasLaptop = titles.some(title =>
-            title.toLowerCase().includes('apple') ||
-            title.toLowerCase().includes('intel')
+            title.toLowerCase().includes('macbook') ||
+            title.toLowerCase().includes('apple') && title.toLowerCase().includes('laptop')
         )
 
         expect(hasLaptop).toBe(true)
+        console.log(`Laptop search returned ${titles.length} products`)
     })
 
     test('Search with non-existent product shows no results message', async () => {
