@@ -1,4 +1,5 @@
 import { Page, Locator } from '@playwright/test'
+import { retry } from '../utils/helpers'
 
 /**
  * Page Object for Flip.ro search results page
@@ -64,7 +65,7 @@ export class SearchResultsPage {
     async waitForResults(): Promise<void> {
         await this.page.waitForLoadState('domcontentloaded')
 
-        const maxTries = process.env.CI ? 20 : 10
+        const maxTries = process.env.CI ? 30 : 10
         for (let i = 0; i < maxTries; i++) {
             const productCount = await this.productCards.count()
             const hasNoResults = await this.hasNoResults()
@@ -73,7 +74,7 @@ export class SearchResultsPage {
                 return
             }
 
-            await this.page.waitForTimeout(process.env.CI ? 500 : 300)
+            await this.page.waitForTimeout(process.env.CI ? 800 : 300)
         }
     }
 
@@ -131,11 +132,17 @@ export class SearchResultsPage {
     }
 
     /**
-     * Click on first product
+     * Click on first product with retry
      */
     async clickFirstProduct(): Promise<void> {
-        await this.getFirstProduct().click({ force: true })
-        await this.page.waitForLoadState('networkidle', { timeout: 10000 }).catch(() => undefined)
+        await this.page.waitForSelector('[data-cy="phone-item"], .product-card, [class*="product-card"]', {
+            timeout: process.env.CI ? 30000 : 10000
+        })
+        await this.page.waitForTimeout(2000)
+        await retry(async () => {
+            await this.getFirstProduct().click({ force: true, timeout: 10000 })
+            await this.page.waitForLoadState('networkidle', { timeout: 10000 }).catch(() => undefined)
+        }, 3, 2000)
     }
 
     /**

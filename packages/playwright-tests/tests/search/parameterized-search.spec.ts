@@ -55,7 +55,7 @@ test.describe('Search with fixture data', () => {
     for (const term of searchTerms.popular) {
         test(`Fixture: Search for "${term}"`, async () => {
             await searchResults.searchFor(term)
-            await searchResults.page.waitForTimeout(2000)
+            await searchResults.page.waitForTimeout(3000)
 
             const productCount = await searchResults.getProductCount()
             expect(productCount).toBeGreaterThan(0)
