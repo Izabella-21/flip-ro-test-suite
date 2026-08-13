@@ -64,8 +64,8 @@ export class SearchResultsPage {
     async waitForResults(): Promise<void> {
         await this.page.waitForLoadState('domcontentloaded')
 
-        const tries = 10
-        for (let i = 0; i < tries; i++) {
+        const maxTries = process.env.CI ? 20 : 10
+        for (let i = 0; i < maxTries; i++) {
             const productCount = await this.productCards.count()
             const hasNoResults = await this.hasNoResults()
 
@@ -73,7 +73,7 @@ export class SearchResultsPage {
                 return
             }
 
-            await this.page.waitForTimeout(300)
+            await this.page.waitForTimeout(process.env.CI ? 500 : 300)
         }
     }
 
