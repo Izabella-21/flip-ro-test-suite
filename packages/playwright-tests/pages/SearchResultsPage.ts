@@ -65,17 +65,14 @@ export class SearchResultsPage {
     async waitForResults(): Promise<void> {
         await this.page.waitForLoadState('domcontentloaded')
 
-        const maxTries = process.env.CI ? 30 : 10
-        for (let i = 0; i < maxTries; i++) {
-            const productCount = await this.productCards.count()
-            const hasNoResults = await this.hasNoResults()
-
-            if (productCount > 0 || hasNoResults) {
-                return
-            }
-
-            await this.page.waitForTimeout(process.env.CI ? 800 : 300)
-        }
+        await this.page.waitForFunction(
+            () => {
+                const products = document.querySelectorAll('[data-cy="phone-item"], .product-card')
+                const noResults = document.body.innerText.toLowerCase().includes('nu am găsit')
+                return products.length > 0 || noResults
+            },
+            { timeout: process.env.CI ? 30000 : 10000 }
+        )
     }
 
     /**
@@ -135,14 +132,10 @@ export class SearchResultsPage {
      * Click on first product with retry
      */
     async clickFirstProduct(): Promise<void> {
-        await this.page.waitForSelector('[data-cy="phone-item"], .product-card, [class*="product-card"]', {
-            timeout: process.env.CI ? 30000 : 10000
-        })
-        await this.page.waitForTimeout(2000)
-        await retry(async () => {
-            await this.getFirstProduct().click({ force: true, timeout: 10000 })
-            await this.page.waitForLoadState('networkidle', { timeout: 10000 }).catch(() => undefined)
-        }, 3, 2000)
+        const product = this.getFirstProduct()
+        await product.waitFor({ state: 'visible', timeout: process.env.CI ? 30000 : 10000 })
+        await product.click({ force: true })
+        await this.page.waitForLoadState('domcontentloaded')
     }
 
     /**

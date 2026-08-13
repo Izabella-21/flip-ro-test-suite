@@ -12,17 +12,16 @@ test.describe('Flip.ro Product Page', () => {
         await handleCookiePopup(page)
         searchResults = new SearchResultsPage(page)
 
-        await test.step('Navigate to product page', async () => {
-            await searchResults.searchFor('iPhone')
-            await page.waitForTimeout(2000) // Wait for results
-            await searchResults.clickFirstProduct()
-            productPage = new ProductPage(page)
-            await productPage.waitForPageLoad()
-        })
+        await searchResults.searchFor('iPhone')
+        await searchResults.waitForResults()
+        await searchResults.clickFirstProduct()
+
+        productPage = new ProductPage(page)
+        await productPage.waitForPageLoad()
     })
 
     test('Product page displays title and price', async () => {
-        await productPage.page.waitForTimeout(1000)
+        await productPage.waitForPageLoad()
         const title = await productPage.getProductTitle()
         const price = await productPage.getProductPrice()
         expect(title.length).toBeGreaterThan(3)
@@ -48,6 +47,7 @@ test.describe('Flip.ro Product Page', () => {
     })
 
     test('Product has condition information', async () => {
+        await expect(productPage.condition).toBeVisible({ timeout: 15000 })
         const condition = await productPage.getProductCondition()
         const validConditions = ['Foarte bun', 'Excelent', 'Bun', 'Acceptabil']
         const hasValidCondition = validConditions.some(c => condition.includes(c))
@@ -59,7 +59,6 @@ test.describe('Flip.ro Product Page', () => {
     })
 
     test('Product description is present', async () => {
-        await productPage.page.waitForTimeout(1000)
         await expect(productPage.description).toBeVisible({ timeout: 15000 })
         await expect(productPage.description).toBeVisible()
     })

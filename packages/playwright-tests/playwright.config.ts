@@ -9,7 +9,7 @@ export default defineConfig({
     testDir: './tests',
     fullyParallel: !isCI,
     retries: isCI ? 3 : 1,
-    workers: isCI ? 1 : 4,
+    workers: isCI ? 1 : 2,
     timeout: isCI ? 120000 : 60000,
 
     expect: {

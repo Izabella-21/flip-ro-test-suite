@@ -43,7 +43,7 @@ test.describe('Flip.ro Search Functionality', () => {
     test('Search for laptop returns laptop products', async () => {
         const searchTerm = 'MacBook'
         await searchResults.searchFor(searchTerm)
-
+        await searchResults.waitForResults()
         const titles = await searchResults.getAllProductTitles()
         const hasLaptop = titles.some(title =>
             title.toLowerCase().includes('macbook') ||
