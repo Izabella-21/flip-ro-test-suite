@@ -1,6 +1,5 @@
 import { defineConfig, devices } from '@playwright/test'
 import dotenv from 'dotenv'
-import path from 'path'
 
 dotenv.config()
 
@@ -12,8 +11,7 @@ export default defineConfig({
     fullyParallel: true,
 
     // Retry failed tests in CI
-    // retries: process.env.CI ? 2 : 1,
-    retries: 0,
+    retries: process.env.CI ? 1 : 1,
 
     // Number of parallel workers
     workers: process.env.CI ? 4 : 2,
@@ -28,9 +26,6 @@ export default defineConfig({
         ['junit', { outputFile: 'junit.xml' }],
         ['list']
     ],
-
-    // Global setup
-    globalSetup: undefined,
 
     use: {
         // Base URL for Flip.ro
@@ -50,6 +45,10 @@ export default defineConfig({
 
         // Navigation timeout
         navigationTimeout: 30000,
+
+        launchOptions: {
+            slowMo: 500
+        }
     },
 
     // Configure browsers

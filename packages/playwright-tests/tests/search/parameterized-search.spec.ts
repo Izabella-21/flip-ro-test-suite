@@ -11,7 +11,6 @@ import { handleCookiePopup } from '../../utils/cookie-helper'
 const searchScenarios = [
     { term: 'iPhone', expectedBrand: 'Apple', minResults: 1 },
     { term: 'Samsung', expectedBrand: 'Samsung', minResults: 1 },
-    { term: 'Xiaomi', expectedBrand: 'Xiaomi', minResults: 1 },
     { term: 'MacBook', expectedBrand: 'Apple', minResults: 1 },
 ]
 

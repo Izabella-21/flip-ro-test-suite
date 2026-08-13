@@ -17,10 +17,8 @@ test.describe('Flip.ro Search Functionality', () => {
     })
 
     test('@smoke - Search for popular brand returns results', async () => {
-        // USE generateTestData
         const testData = generateTestData()
         const searchTerm = testData.searchTermPhone
-
         await searchResults.searchFor(searchTerm)
 
         const productCount = await searchResults.getProductCount()
@@ -31,9 +29,7 @@ test.describe('Flip.ro Search Functionality', () => {
     })
 
     test('Search for specific model - iPhone 13', async () => {
-        // This one can stay specific (it's testing a specific model)
         await searchResults.searchFor('iPhone 13')
-
 
         const titles = await searchResults.getAllProductTitles()
         const hasiPhone13 = titles.some(title =>
@@ -45,10 +41,10 @@ test.describe('Flip.ro Search Functionality', () => {
     })
 
     test('Search for laptop returns laptop products', async () => {
-        // Use generateTestData for variety
         const testData = generateTestData()
         const searchTerm = testData.searchTermLaptop
         await searchResults.searchFor(searchTerm)
+
         const titles = await searchResults.getAllProductTitles()
         const hasLaptop = titles.some(title =>
             title.toLowerCase().includes('apple') ||
@@ -62,8 +58,6 @@ test.describe('Flip.ro Search Functionality', () => {
         await searchResults.searchFor(searchTerms.nonExistent)
         const hasNoResults = await searchResults.hasNoResults()
         const productCount = await searchResults.getProductCount()
-
-        // Either shows "no results" message OR product count is 0
         expect(hasNoResults || productCount === 0).toBe(true)
     })
 

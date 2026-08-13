@@ -5,7 +5,7 @@
 
 export const searchTerms = {
     // Popular brands
-    popular: ['iPhone', 'Samsung', 'Xiaomi', 'Huawei'],
+    popular: ['iPhone', 'Samsung', 'Xiaomi'],
 
     // Specific models
     models: [

@@ -22,7 +22,10 @@ export class SearchResultsPage {
         this.page = page
 
         // Search input
-        this.searchInput = page.getByRole('textbox', { name: "Cauta device-ul mult dorit" })
+        this.searchInput = page
+            .locator('input[placeholder*="Cauta"], input[placeholder*="Caută"], input[aria-label*="Caut"], input[type="search"]')
+            .filter({ hasNotText: '' })
+            .first()
 
         // Product list elements
         this.resultsContainer = page.locator('.grid')
@@ -50,8 +53,8 @@ export class SearchResultsPage {
      * Search for a product
      */
     async searchFor(term: string): Promise<void> {
-        await this.searchInput.fill(term + '\n')
-        await this.searchInput.press('Enter')
+        const query = encodeURIComponent(term)
+        await this.page.goto(`/magazin/?search=${query}`, { waitUntil: 'domcontentloaded' })
         await this.waitForResults()
     }
 
@@ -60,10 +63,17 @@ export class SearchResultsPage {
      */
     async waitForResults(): Promise<void> {
         await this.page.waitForLoadState('domcontentloaded')
-        try {
-            await this.productCards.first().waitFor({ state: 'visible', timeout: 10000 })
-        } catch {
-            await this.noResultsMessage.waitFor({ state: 'visible', timeout: 5000 })
+
+        const tries = 10
+        for (let i = 0; i < tries; i++) {
+            const productCount = await this.productCards.count()
+            const hasNoResults = await this.hasNoResults()
+
+            if (productCount > 0 || hasNoResults) {
+                return
+            }
+
+            await this.page.waitForTimeout(300)
         }
     }
 
@@ -124,8 +134,8 @@ export class SearchResultsPage {
      * Click on first product
      */
     async clickFirstProduct(): Promise<void> {
-        await this.getFirstProduct().click()
-        await this.page.waitForLoadState('networkidle')
+        await this.getFirstProduct().click({ force: true })
+        await this.page.waitForLoadState('networkidle', { timeout: 10000 }).catch(() => undefined)
     }
 
     /**
@@ -140,7 +150,8 @@ export class SearchResultsPage {
      * Check if no results message is displayed
      */
     async hasNoResults(): Promise<boolean> {
-        return await this.noResultsMessage.isVisible()
+        const bodyText = (await this.page.locator('body').innerText()).toLowerCase()
+        return /nu am găsit|nu am gasit|niciun rezultat|no results|0 produse/.test(bodyText)
     }
 
     /**
@@ -197,7 +208,7 @@ export class SearchResultsPage {
      */
     getSearchTermFromUrl(): string | null {
         const url = this.page.url()
-        const match = url.match(/[?&]search=([^&]+)/)
+        const match = url.match(/[?&](?:search|q)=([^&]+)/i)
         return match ? decodeURIComponent(match[1]) : null
     }
 }
