@@ -6,20 +6,6 @@ on:
   pull_request:
     branches: [ main, master ]
   workflow_dispatch:
-    inputs:
-      test_file:
-        description: 'Specific test file to run (leave empty for all)'
-        required: false
-        default: ''
-      browser:
-        description: 'Browser to use'
-        required: true
-        default: 'chromium'
-        type: choice
-        options:
-          - chromium
-          - firefox
-          - webkit
 
 jobs:
   test:
@@ -34,15 +20,15 @@ jobs:
         node-version: 22
     
     - name: Install dependencies
-      working-directory: packages/playwright-tests  # ← ADD THIS
-      run: npm ci  # Now works because it's in the right folder
+      working-directory: packages/playwright-tests
+      run: npm ci
     
     - name: Install Playwright Browsers
-      working-directory: packages/playwright-tests  # ← ADD THIS
+      working-directory: packages/playwright-tests
       run: npx playwright install --with-deps chromium
     
     - name: Run Playwright tests
-      working-directory: packages/playwright-tests  # ← ADD THIS
+      working-directory: packages/playwright-tests
       run: npx playwright test
     
     - uses: actions/upload-artifact@v4

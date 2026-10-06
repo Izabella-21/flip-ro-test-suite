@@ -77,4 +77,3 @@ secrets.json
 tmp/
 temp/
 *.tmp
-Makefile
