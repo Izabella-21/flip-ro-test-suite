@@ -5,6 +5,21 @@ on:
     branches: [ main, master ]
   pull_request:
     branches: [ main, master ]
+  workflow_dispatch:
+    inputs:
+      test_file:
+        description: 'Specific test file to run (leave empty for all)'
+        required: false
+        default: ''
+      browser:
+        description: 'Browser to use'
+        required: true
+        default: 'chromium'
+        type: choice
+        options:
+          - chromium
+          - firefox
+          - webkit
 
 jobs:
   test:
